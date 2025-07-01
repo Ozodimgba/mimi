@@ -1,8 +1,8 @@
 FROM ubuntu:22.04
 
-# Prevent interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Update system and install basic dependencies
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
@@ -36,7 +36,9 @@ RUN wget -qO /bin/ttyd https://github.com/tsl0922/ttyd/releases/download/1.7.3/t
 RUN curl -L https://coder.com/install.sh | sh
 
 # Create a non-root user for running Coder
-RUN useradd -m -s /bin/bash -G docker,sudo coder && \
+RUN groupadd -f sudo && \
+    useradd -m -s /bin/bash -G docker coder && \
+    usermod -aG sudo coder && \
     echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Add neofetch to both users' bashrc
