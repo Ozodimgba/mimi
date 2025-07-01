@@ -1,0 +1,27 @@
+app = "cde"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+
+[[services]]
+  internal_port = 22
+  protocol = "tcp"
+  
+  [[services.ports]]
+    port = 22
+    handlers = ["tcp"]
+
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 1024
+
+[[mounts]]
+  source = "workspace_data"
+  destination = "/workspace"
+
+[deploy]
+  strategy = "immediate"
