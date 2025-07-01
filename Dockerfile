@@ -28,18 +28,17 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
+# Create a non-root user for running Coder
+RUN useradd -m -s /bin/bash coder && \
+    usermod -aG docker coder && \
+    echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 # Install ttyd
 RUN wget -qO /bin/ttyd https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 && \
     chmod +x /bin/ttyd
 
 # Install Coder
 RUN curl -L https://coder.com/install.sh | sh
-
-# Create a non-root user for running Coder
-RUN groupadd -f sudo && \
-    useradd -m -s /bin/bash -G docker coder && \
-    usermod -aG sudo coder && \
-    echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Add neofetch to both users' bashrc
 RUN echo "neofetch" >> /root/.bashrc && \
